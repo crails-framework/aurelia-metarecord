@@ -1,0 +1,38 @@
+{
+  "name": "aurelia-metarecord",
+  "version": "0.1.0",
+  "description": "Collections of objects used by the MetaRecord generator for aurelia",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crails-framework/aurelia-metarecord.git"
+  },
+  "keywords": [
+    "crails",
+    "metarecord",
+    "aurelia"
+  ],
+  "author": "Michael Martin Moro",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/crails-framework/aurelia-metarecord/issues"
+  },
+  "homepage": "https://github.com/crails-framework/aurelia-metarecord#readme",
+  "dependencies": {
+    "deep-clone": "^3.0.3",
+    "underscore": "^1.9.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "babel-plugin-syntax-flow": "^6.18.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "path": "^0.12.7"
+  }
+}
