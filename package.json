@@ -23,16 +23,15 @@
   "homepage": "https://github.com/crails-framework/aurelia-metarecord#readme",
   "dependencies": {
     "deep-clone": "^3.0.3",
+    "gulp-concat": "^2.6.1",
     "underscore": "^1.9.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
-    "babel-plugin-syntax-flow": "^6.18.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-core": "^6.26.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
     "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-concat": "^2.6.1",
-    "path": "^0.12.7"
+    "gulp-babel": "^7.0.1"
   }
 }
