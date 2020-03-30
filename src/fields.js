@@ -1,5 +1,6 @@
 import deepClone from "deep-clone";
 import _ from "underscore";
+import {inject} from "./inject";
 
 function collect(object, values) {
   let array = [];
@@ -59,3 +60,7 @@ export class Fields {
     });
   }
 };
+
+Fields.inject = function(target) {
+  inject(target, Fields);
+}
