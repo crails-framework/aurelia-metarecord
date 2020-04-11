@@ -18,12 +18,6 @@ export class Model {
     return model;
   }
 
-  get name() {
-    if (this.attributes.code != undefined && this.attributes.code.length > 0)
-      return `${this.attributes.code} - ${this.attributes.name}`;
-    return this.attributes.name;
-  }
-
   parse(object) {
     let scope = this.constructor.scope;
     var attributes;

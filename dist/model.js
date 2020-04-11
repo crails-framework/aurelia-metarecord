@@ -104,12 +104,6 @@ var Model = exports.Model = function () {
       });
       return observers;
     }
-  }, {
-    key: "name",
-    get: function get() {
-      if (this.attributes.code != undefined && this.attributes.code.length > 0) return this.attributes.code + " - " + this.attributes.name;
-      return this.attributes.name;
-    }
   }]);
 
   return Model;
