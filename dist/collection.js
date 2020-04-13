@@ -65,9 +65,25 @@ var Collection = exports.Collection = function () {
       });
     }
   }, {
+    key: "fetchOne",
+    value: function fetchOne(id) {
+      var _this2 = this;
+
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      return this.http.fetch(this.url + "/" + id, options).then(function (response) {
+        return response.json().then(function (data) {
+          return _this2.parseOne(data, options);
+        }).catch(function (error) {
+          console.error("JsonParseError", error);
+          throw error;
+        });
+      });
+    }
+  }, {
     key: "parse",
     value: function parse(data) {
-      var _this2 = this,
+      var _this3 = this,
           _models;
 
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -77,7 +93,7 @@ var Collection = exports.Collection = function () {
 
       if (list) {
         list.forEach(function (rawModel) {
-          var model = new _this2.Model();
+          var model = new _this3.Model();
 
           model.parse(rawModel);
           results.push(model);
@@ -85,6 +101,17 @@ var Collection = exports.Collection = function () {
       } else console.warn("parse called, but there was nothing to parse in", data);
       if (options.appender) options.appender(results);else (_models = this.models).splice.apply(_models, [this.models.length, 0].concat(results));
       return results;
+    }
+  }, {
+    key: "parseOne",
+    value: function parseOne(data) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var model = new this.Model();
+
+      model.parse(data, options);
+      if (options.appender) options.appender(model);else this.models.push(model);
+      return model;
     }
   }, {
     key: "scope",
@@ -102,13 +129,13 @@ var PagedCollection = exports.PagedCollection = function (_Collection) {
   function PagedCollection(http) {
     _classCallCheck(this, PagedCollection);
 
-    var _this3 = _possibleConstructorReturn(this, (PagedCollection.__proto__ || Object.getPrototypeOf(PagedCollection)).call(this, http));
+    var _this4 = _possibleConstructorReturn(this, (PagedCollection.__proto__ || Object.getPrototypeOf(PagedCollection)).call(this, http));
 
-    _this3.itemsCount = null;
-    _this3.itemsPerPage = 10;
-    _this3.pageFetched = [];
-    _this3.paginateScope = "paginate";
-    return _this3;
+    _this4.itemsCount = null;
+    _this4.itemsPerPage = 10;
+    _this4.pageFetched = [];
+    _this4.paginateScope = "paginate";
+    return _this4;
   }
 
   _createClass(PagedCollection, [{
@@ -145,12 +172,12 @@ var PagedCollection = exports.PagedCollection = function (_Collection) {
   }, {
     key: "fetchPage",
     value: function fetchPage(position) {
-      var _this4 = this;
+      var _this5 = this;
 
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
       if (this.haveAllPagesBeenFetched || this.pageFetched.indexOf(position) >= 0) return new Promise(function (resolve) {
-        resolve(_this4.page(position));
+        resolve(_this5.page(position));
       });
       return this.fetch(_underscore2.default.extend({ page: position, itemsPerPage: this.itemsPerPage }, options));
     }

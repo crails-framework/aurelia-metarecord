@@ -130,5 +130,46 @@ describe("Collection", function() {
       });
     });
   });
+
+  describe("fetchOne", function() {
+    var responseStub = new class {
+      json() {
+        return new Promise(resolve => { resolve(this.data); });
+      }
+    };
+    var httpStub = new class {
+      fetch(url, options) {
+        this._calledWith = { url: url, options: options };
+        return new Promise(resolve => { resolve(responseStub); });
+      }
+    };
+    var collection;
+
+    beforeEach(function() {
+      collection = new MyCollection(httpStub);
+      collection.url = "/things";
+      collection.Model.constructor.parse = sinon.fake();
+      responseStub.data = { id: "modelid", someattr: "hello model" };
+    });
+
+    it("should call http.fetch with the collection's url appended with the model's id", function() {
+      collection.fetchOne("modelid");
+      assert.equal(httpStub._calledWith.url, "/things/modelid");
+    });
+
+    it("should resolve the promise with the fetched model", function() {
+      return collection.fetchOne("modelid").then(function (model) {
+        assert.equal(model.constructor, collection.Model);
+        assert.equal(model.id, "modelid");
+        assert.equal(model.attributes.someattr, "hello model");
+      });
+    });
+
+    it("should append the model to the collection's model list", function() {
+      return collection.fetchOne("modelid").then(function (model) {
+        assert.equal(collection.models.length, 1);
+      });
+    });
+  });
 });
 

@@ -34,6 +34,17 @@ export class Collection {
     });
   }
 
+  fetchOne(id, options = {}) {
+    return this.http.fetch(`${this.url}/${id}`, options).then(response => {
+      return response.json().then(data => {
+        return this.parseOne(data, options);
+      }).catch(error => {
+        console.error("JsonParseError", error);
+        throw error;
+      });
+    });
+  }
+
   parse(data, options = {}) {
     const list = !data || _.isArray(data) ? data : data[this.scope];
     const results = [];
@@ -52,6 +63,17 @@ export class Collection {
     else
       this.models.splice(this.models.length, 0, ...results);
     return results;
+  }
+
+  parseOne(data, options = {}) {
+    const model = new this.Model;
+
+    model.parse(data, options);
+    if (options.appender)
+      options.appender(model);
+    else
+      this.models.push(model);
+    return model;
   }
 }
 
