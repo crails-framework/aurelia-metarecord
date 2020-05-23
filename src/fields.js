@@ -16,7 +16,7 @@ export class Fields {
   clone() {
     let cloned = deepClone(this);
 
-    _.extend(cloned, new Fields);
+    Fields.inject(cloned);
     cloned._mapFields();
     return cloned;
   }
@@ -49,7 +49,7 @@ export class Fields {
       result = _.without(this, ...(collect(this, fieldName)));
     else
       result = _.without(this, this[fieldName]);
-    result = _.extend(result, new Fields);
+    Fields.inject(result);
     result._mapFields();
     return result;
   }

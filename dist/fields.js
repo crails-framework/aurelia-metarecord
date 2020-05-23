@@ -42,7 +42,7 @@ var Fields = exports.Fields = function () {
     value: function clone() {
       var cloned = (0, _deepClone2.default)(this);
 
-      _underscore2.default.extend(cloned, new Fields());
+      Fields.inject(cloned);
       cloned._mapFields();
       return cloned;
     }
@@ -76,7 +76,7 @@ var Fields = exports.Fields = function () {
       var result;
 
       if (fieldName.constructor == Array) result = _underscore2.default.without.apply(_underscore2.default, [this].concat(_toConsumableArray(collect(this, fieldName))));else result = _underscore2.default.without(this, this[fieldName]);
-      result = _underscore2.default.extend(result, new Fields());
+      Fields.inject(result);
       result._mapFields();
       return result;
     }
