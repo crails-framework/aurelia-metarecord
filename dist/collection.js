@@ -27,6 +27,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function urlWithParams(url, options) {
+  var keys = _underscore2.default.keys(options);
+  var result = url;
+
+  for (var i = 0; i < keys.length; ++i) {
+    result += i == 0 ? '?' : '&';
+    result += encodeURIComponent(keys[i]) + '=';
+    result += encodeURIComponent(options[keys[i]]);
+  }
+  return result;
+}
+
 var Collection = exports.Collection = function () {
   function Collection(http) {
     _classCallCheck(this, Collection);
@@ -55,7 +67,9 @@ var Collection = exports.Collection = function () {
 
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      return this.http.fetch(this.url, options).then(function (response) {
+      var url = urlWithParams(this.url, options.params);
+
+      return this.http.fetch(url).then(function (response) {
         return response.json().then(function (data) {
           return _this.parse(data, options);
         }).catch(function (error) {
@@ -71,7 +85,9 @@ var Collection = exports.Collection = function () {
 
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      return this.http.fetch(this.url + "/" + id, options).then(function (response) {
+      var url = urlWithParams(this.url + "/" + id, options.params);
+
+      return this.http.fetch(url, options).then(function (response) {
         return response.json().then(function (data) {
           return _this2.parseOne(data, options);
         }).catch(function (error) {
@@ -176,10 +192,13 @@ var PagedCollection = exports.PagedCollection = function (_Collection) {
 
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      var params = options.params || {};
+
       if (this.haveAllPagesBeenFetched || this.pageFetched.indexOf(position) >= 0) return new Promise(function (resolve) {
         resolve(_this5.page(position));
       });
-      return this.fetch(_underscore2.default.extend({ page: position, itemsPerPage: this.itemsPerPage }, options));
+      options.params = _underscore2.default.extend(params, { page: position, itemsPerPage: this.itemsPerPage });
+      return this.fetch(options);
     }
   }, {
     key: "_paginatedAppender",

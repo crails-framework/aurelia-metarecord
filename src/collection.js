@@ -1,6 +1,18 @@
 import pluralize from "pluralize";
 import _ from "underscore";
 
+function urlWithParams(url, options) {
+  const keys = _.keys(options);
+  let result = url;
+
+  for (var i = 0 ; i < keys.length ; ++i) {
+    result += i == 0 ? '?' : '&';
+    result += encodeURIComponent(keys[i]) + '='
+    result += encodeURIComponent(options[keys[i]]);
+  }
+  return result;
+}
+
 export class Collection {
   constructor(http) {
     this.http = http;
@@ -24,7 +36,9 @@ export class Collection {
   }
 
   fetch(options = {}) {
-    return this.http.fetch(this.url, options).then(response => {
+    const url = urlWithParams(this.url, options.params);
+
+    return this.http.fetch(url).then(response => {
       return response.json().then(data => {
         return this.parse(data, options);
       }).catch(error => {
@@ -35,7 +49,9 @@ export class Collection {
   }
 
   fetchOne(id, options = {}) {
-    return this.http.fetch(`${this.url}/${id}`, options).then(response => {
+    const url = urlWithParams(`${this.url}/${id}`, options.params);
+
+    return this.http.fetch(url, options).then(response => {
       return response.json().then(data => {
         return this.parseOne(data, options);
       }).catch(error => {
@@ -122,9 +138,12 @@ export class PagedCollection extends Collection {
   }
 
   fetchPage(position, options = {}) {
+    const params = options.params || {};
+
     if (this.haveAllPagesBeenFetched || this.pageFetched.indexOf(position) >= 0)
       return new Promise(resolve => { resolve(this.page(position)); });
-    return this.fetch(_.extend({ page: position, itemsPerPage: this.itemsPerPage }, options));
+    options.params = _.extend(params, { page: position, itemsPerPage: this.itemsPerPage });
+    return this.fetch(options);
   }
 
   _paginatedAppender(page, results) {

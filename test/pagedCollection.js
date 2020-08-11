@@ -130,7 +130,7 @@ describe("PagedCollection", function() {
 
       collection.itemsPerPage = 20;
       collection.fetchPage(1);
-      assert(collection.fetch.calledWith({ page: 1, itemsPerPage: 20 }));
+      assert(collection.fetch.calledWith({ params: { page: 1, itemsPerPage: 20 } }));
     });
 
     it("should return the requested page if it has already been fetched", function() {
