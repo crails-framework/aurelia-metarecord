@@ -129,6 +129,17 @@ describe("Collection", function() {
         assert(collection.parse.calledWith(responseStub.data));
       });
     });
+
+    it("should forward the options parameter to http-fetch", function() {
+      collection.fetch({ method: "post" });
+      assert.equal(httpStub._calledWith.options.method, "post");
+    });
+
+    it("should initialize url parameters from options", function() {
+      collection.url = "/things";
+      collection.fetch({ params: { a: 42, b: 12} });
+      assert.equal(httpStub._calledWith.url, "/things?a=42&b=12");
+    });
   });
 
   describe("fetchOne", function() {
@@ -169,6 +180,16 @@ describe("Collection", function() {
       return collection.fetchOne("modelid").then(function (model) {
         assert.equal(collection.models.length, 1);
       });
+    });
+
+    it("should forward the options parameter to http-fetch", function() {
+      collection.fetchOne("modelid", { method: "post" });
+      assert.equal(httpStub._calledWith.options.method, "post");
+    });
+
+    it("should initialize url parameters from options", function() {
+      collection.fetchOne(16, { params: { a: 42, b: 12} });
+      assert.equal(httpStub._calledWith.url, "/things/16?a=42&b=12");
     });
   });
 });

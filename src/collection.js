@@ -38,7 +38,7 @@ export class Collection {
   fetch(options = {}) {
     const url = urlWithParams(this.url, options.params);
 
-    return this.http.fetch(url).then(response => {
+    return this.http.fetch(url, options).then(response => {
       return response.json().then(data => {
         return this.parse(data, options);
       }).catch(error => {

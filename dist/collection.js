@@ -69,7 +69,7 @@ var Collection = exports.Collection = function () {
 
       var url = urlWithParams(this.url, options.params);
 
-      return this.http.fetch(url).then(function (response) {
+      return this.http.fetch(url, options).then(function (response) {
         return response.json().then(function (data) {
           return _this.parse(data, options);
         }).catch(function (error) {
