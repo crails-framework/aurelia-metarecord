@@ -1,16 +1,11 @@
 import pluralize from "pluralize";
-import _ from "underscore";
 
 function urlWithParams(url, options) {
-  const keys = _.keys(options);
-  let result = url;
-
-  for (var i = 0 ; i < keys.length ; ++i) {
-    result += i == 0 ? '?' : '&';
-    result += encodeURIComponent(keys[i]) + '='
-    result += encodeURIComponent(options[keys[i]]);
-  }
-  return result;
+  const keys = options ? Object.keys(options) : [];
+  const query = keys
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(options[key])}`)
+    .join('&');
+  return url + (query ? ('?' + query) : '');
 }
 
 export class Collection {
@@ -62,7 +57,7 @@ export class Collection {
   }
 
   parse(data, options = {}) {
-    const list = !data || _.isArray(data) ? data : data[this.scope];
+    const list = !data || Array.isArray(data) ? data : data[this.scope];
     const results = [];
 
     if (list) {
@@ -119,9 +114,9 @@ export class PagedCollection extends Collection {
   }
 
   itemOffsetForPage(position) {
-    const filter = function(i) { return i < position; };
-
-    return _.select(this.pageFetched, filter).length * this.itemsPerPage;
+    return this.pageFetched
+      .filter(i => i < position)
+      .length * this.itemsPerPage;
   }
 
   page(position) {
@@ -142,7 +137,7 @@ export class PagedCollection extends Collection {
 
     if (this.haveAllPagesBeenFetched || this.pageFetched.indexOf(position) >= 0)
       return new Promise(resolve => { resolve(this.page(position)); });
-    options.params = _.extend(params, { page: position, itemsPerPage: this.itemsPerPage });
+    options.params = { ...params, page: position, itemsPerPage: this.itemsPerPage };
     return this.fetch(options);
   }
 
@@ -155,7 +150,7 @@ export class PagedCollection extends Collection {
   parse(data, options = {}) {
     const appender = this._paginatedAppender.bind(this, options.page);
     const pageOptions = options.page != undefined
-      ? _.extend({ appender: appender }, options)
+      ? { appender, ...options}
       : options;
     const results = super.parse(data, pageOptions);
 

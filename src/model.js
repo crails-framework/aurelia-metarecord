@@ -1,4 +1,13 @@
-import _ from "underscore";
+import * as _ from "./tools.js";
+
+function cloneAttributes(list) {
+  list = { ...list };
+  Object
+    .keys(list)
+    .filter(key => list[key] && Array.isArray(list[key]))
+    .forEach(key => list[key] = list[key].slice());
+  return list;
+}
 
 export class Model {
   constructor(attrs) {
@@ -10,11 +19,7 @@ export class Model {
     const model = new this.constructor;
 
     _.extend(model, this);
-    model.attributes = _.clone(this.attributes);
-    _.keys(model.attributes).forEach(key => {
-      if (model.attributes[key] && model.attributes[key].constructor == Array)
-        model.attributes[key] = model.attributes[key].slice();
-    });
+    model.attributes = cloneAttributes(this.attributes);
     return model;
   }
 
@@ -47,7 +52,7 @@ export class Model {
   }
 
   updateAttributes(attributes, opts) {
-    _.collect(_.keys(attributes), (key) => {
+    Object.keys(attributes).forEach(key => {
       const oldValue = this.attributes[key];
 
       if (key == 'id')
@@ -62,7 +67,7 @@ export class Model {
   }
 
   removeUnexistingAttributes(attributes) {
-    _.collect(_.keys(this.attributes), (key) => {
+    Object.keys(this.attributes).forEach(key => {
       if (attributes[key] == undefined)
         delete this.attributes[key];
     });

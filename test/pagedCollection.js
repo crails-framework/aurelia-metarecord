@@ -1,7 +1,7 @@
-const assert = require("assert");
-const sinon = require("sinon");
-const Model = require("../dist/model").Model;
-const PagedCollection = require("../dist/collection").PagedCollection;
+import assert from "assert";
+import sinon from "sinon";
+import {Model} from "../dist/model.js";
+import {PagedCollection} from "../dist/collection.js";
 
 describe("PagedCollection", function() {
   var MyCollection, MyModel;

@@ -1,6 +1,5 @@
 import deepClone from "deep-clone";
-import _ from "underscore";
-import {inject} from "./inject";
+import {inject} from "./inject.js";
 
 function collect(object, values) {
   let array = [];
@@ -30,10 +29,10 @@ export class Fields {
   }
 
   select(fields) {
-    var result = this.clone();
+    let result = this.clone();
 
     this.forEach(field => {
-      if (!_.include(fields, field.name))
+      if (!fields.includes(field.name))
         result = result.without(field.name);
     });
     result.sort((a, b) => {
@@ -43,12 +42,12 @@ export class Fields {
   }
 
   without(fieldName) {
-    var result;
+    let result;
 
     if (fieldName.constructor == Array)
-      result = _.without(this, ...(collect(this, fieldName)));
+      result = this.filter(value => !fieldName.includes(value.name));
     else
-      result = _.without(this, this[fieldName]);
+      result = this.filter(value => value != this[fieldName]);
     Fields.inject(result);
     result._mapFields();
     return result;

@@ -1,5 +1,5 @@
-const assert = require("assert");
-const Fields = require("../dist/fields").Fields;
+import assert from "assert";
+import {Fields} from "../dist/fields.js";
 
 describe("Fields", function() {
   var fields;
